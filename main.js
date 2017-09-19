@@ -77,6 +77,8 @@ var itemDB = {
 	itemID : [],
 };
 
+
+
 var player = {
 	name : "Gucci",
 	hp : 300,
@@ -84,6 +86,8 @@ var player = {
 	gold : 0,
 	xp : 0,
 	level : 1,
+	focus : 0,
+	maxint : 50,
 	x : 50,
 	y : 0,
 	dead : false,
@@ -93,9 +97,8 @@ var player = {
 	dead : false, 
 	atkrating : 0,
 	blacksmithProf : 0,
-	mHand : loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0],
-    maxint : 50,
-    focus : 0
+	mHand : loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0]
+    
 	// get atkrating () {
     // return  this.inventory.weapons.atkrating;
   // }
@@ -253,10 +256,6 @@ function Focus(number){
         upgradeCost.Focus = Math.floor(50 * Math.pow(1.1,player.focus));
         player.focus = player.focus + number;
         intelligence -= upgradeCost.Focus;
-        var i=0;
-        player.maxint += Math.floor(50 * Math.pow(1.1,i));
-        i++;
-//        document.getElementsByClassName("player.maxint")[0].innerHTML = player.maxint;
         upgradeCost.nextFocus = Math.floor(50 * Math.pow(1.1,player.focus)); //get next focuscost
         document.getElementsByClassName("focusCost")[0].innerHTML = upgradeCost.nextFocus;
         if(player.focus <= 15  && player.focus <= 25) {
@@ -519,6 +518,9 @@ function MessageScroll() {
 //            }, 
 
 //--SAVING--
+
+
+
 function save(){
     
 	var save = {
@@ -531,14 +533,17 @@ function save(){
 		stones: stones,
 		WSReq: WSReq,
 		wood: wood,
-        upgradeCost: upgradeCost,
-        loot : loot
+		upgradeCost: upgradeCost
 	}
 	localStorage.setItem("save",JSON.stringify(save)); 
+
+	var lootsave = JSON.stringify(loot);
+	localStorage.setItem("lootsave", lootsave);
 }
 
 function load(){
-	var savegame = JSON.parse(localStorage.getItem("save")); 
+	var savegame = JSON.parse(localStorage.getItem("save"));
+	var lootsave = JSON.parse(localStorage.getItem("lootsave"));  
 	if (typeof savegame.intelligence !== "undefined") intelligence = savegame.intelligence; 
 	if (typeof savegame.braincells !== "undefined") braincells = savegame.braincells;
 	if (typeof savegame.braincellNextCost !== "undefined") braincellNextCost = savegame.braincellNextCost;
@@ -550,7 +555,7 @@ function load(){
 	if (typeof savegame.food !== "undefined") food = savegame.food;
 	if (typeof savegame.player !== "undefined") player = savegame.player;
     if (typeof savegame.upgradeCost !== "undefined") upgradeCost = savegame.upgradeCost;
- 	if (typeof savegame.loot !== "undefined") loot = savegame.loot;
+ 	if (typeof loot !== "undefined") loot = lootsave;
 
 	
 	
@@ -571,6 +576,11 @@ function intpscheck() {
 	document.getElementById("intps").innerHTML = intps + (braincells*0.25);
 }
 
+function statMultipliers() {
+	player.maxint = 50 + 50 * player.focus
+
+
+};
 
 
 // --ActionChecks--	
@@ -706,6 +716,7 @@ window.setInterval(function(){
 	rngcolorgen();
 	InvNames();
 	GetPlayerAtkRt();
+	statMultipliers();
 
 	
 }, 1000);

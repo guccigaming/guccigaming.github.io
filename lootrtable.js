@@ -9,6 +9,8 @@ function randomIntFromInterval(min,max)
     return Math.floor(Math.random()*(max-min+1)+min);
 }
 
+
+
 var loot = new Lootr('/equipment')
 var deadMonster = [];
 var craftSword = [];
