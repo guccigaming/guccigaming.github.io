@@ -42,8 +42,8 @@ var WSReq = 0;
 var wood = 0;
 var stones = 0;
 var wandergain = 0;
-var WanderUnlocked = 0;
-var ForageUnlocked = 0;
+
+
 
 var dead = false;
 
@@ -67,7 +67,6 @@ loot.setModifiers([
 	{ intell:  '2-10' },
 	{ name:    '$color $name from the gods', force: '+4' }
 ])
-
 
 //--OBJECTS
 
@@ -115,7 +114,10 @@ var monster = {
 	breed : "breed"
 };
 
-	
+var upgradeCost = {
+    Focus : 50,
+    nextFocus : 50
+}	
 	
 
 
@@ -223,30 +225,40 @@ function Think(number) {
 
 function buyBraincell(){
 	
-	braincellCost = Math.floor(10 * Math.pow(1.1,braincells)); //works out cost of braincell
+	braincellCost =  Math.floor(10 * Math.pow(1.1,braincells)); //works out cost of braincell
 	if(intelligence >= braincellCost){
 		braincells = braincells + 1;
 		intelligence = intelligence - braincellCost;
 		document.getElementById("braincells").innerHTML = braincells;
 		document.getElementById("intelligence").innerHTML = intelligence;
+        braincellNextCost = Math.floor(10 * Math.pow(1.1,braincells));
+	   document.getElementById("braincellCost").innerHTML = braincellNextCost;
+	   StatCheck()
 	};
-	braincellNextCost = Math.floor(10 * Math.pow(1.1,braincells));
-	document.getElementById("braincellCost").innerHTML = braincellNextCost;
-	StatCheck()
+
 
 };
 
 
 
 
-function LookAround(number){
+function Focus(number){
     if(intelligence < 50){
       //do nothing  
         
     }
     else {
-        intelligence -= focusCost
-        player.focus = player.focus + number
+        
+        
+        upgradeCost.Focus = Math.floor(50 * Math.pow(1.1,player.focus));
+        player.focus = player.focus + number;
+        intelligence -= upgradeCost.Focus;
+        var i=0;
+        player.maxint += Math.floor(50 * Math.pow(1.1,i));
+        i++;
+//        document.getElementsByClassName("player.maxint")[0].innerHTML = player.maxint;
+        upgradeCost.nextFocus = Math.floor(50 * Math.pow(1.1,player.focus)); //get next focuscost
+        document.getElementsByClassName("focusCost")[0].innerHTML = upgradeCost.nextFocus;
         if(player.focus <= 15  && player.focus <= 25) {
             message = "Your mind begins to clear up... </br>"	
             Message();
@@ -499,13 +511,18 @@ function MessageScroll() {
 // }
 
 
+
+//
+//{
+//            focus : player.focus,
+//            hp : player.hp
+//            }, 
+
 //--SAVING--
 function save(){
+    
 	var save = {
-        player : {
-            focus : player.focus,
-            hp : player.hp
-            }, 
+        player : player,
 		intelligence: intelligence,
 		braincells: braincells,
 		braincellNextCost: braincellNextCost,
@@ -513,7 +530,9 @@ function save(){
 		food: food,
 		stones: stones,
 		WSReq: WSReq,
-		wood: wood
+		wood: wood,
+        upgradeCost: upgradeCost,
+        loot : loot
 	}
 	localStorage.setItem("save",JSON.stringify(save)); 
 }
@@ -529,9 +548,9 @@ function load(){
 	if (typeof savegame.wood !== "undefined") wood = savegame.wood;
 	if (typeof savegame.WSReq !== "undefined") WSReq = savegame.WSReq;
 	if (typeof savegame.food !== "undefined") food = savegame.food;
-	
- 	
- 	
+	if (typeof savegame.player !== "undefined") player = savegame.player;
+    if (typeof savegame.upgradeCost !== "undefined") upgradeCost = savegame.upgradeCost;
+ 	if (typeof savegame.loot !== "undefined") loot = savegame.loot;
 
 	
 	
@@ -573,17 +592,17 @@ function ActionCheck() {
 		$("#WanderUnlocked").hide();
 	}
 	else {
-		WanderUnlocked = 1
+		
 		$("#WanderUnlocked").show();
 	}
-	if (player.focus > 39 && braincells > 9) {
+	if (player.focus > 2 && braincells > 9) {
+       
 		$("#ForageUnlocked").show();
 	}
 	else {
-		ForageUnlocked = 1
 		$("#ForageUnlocked").hide();
 	}
-	if (player.focus > 50 && braincells > 25) {
+	if (player.focus > 5 && braincells > 25) {
 		// document.getElementById("CraftPageUnlocked").classList.add('nav-item nav-link');
 		$("#CraftPageUnlocked").show();
 	}
@@ -626,6 +645,7 @@ function InvCheck() {
 	document.getElementById("player.mHand.weaponAtk").innerHTML = loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0].weaponAtk;
 	document.getElementsByClassName("stones")[0].innerHTML = stones;
     document.getElementsByClassName("player.maxint")[0].innerHTML = player.maxint;
+    document.getElementsByClassName("focusCost")[0].innerHTML = upgradeCost.nextFocus;
 	
 	
 	
