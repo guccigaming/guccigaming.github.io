@@ -1,0 +1,230 @@
+<!-- <html> -->
+	<!-- <head> -->
+		<!-- <link rel="stylesheet" type="text/css" href="interface.css" /> -->
+	<!-- </head> -->
+	<!-- <body> -->
+		<!-- <button onclick="cookieClick(1)">Click Me!</button> -->
+		<!-- <br /> -->
+		<!-- Cookies: <span id="cookies">0</span> -->
+		<!-- <br /> -->
+		<!-- <button onclick="buyCursor()">Buy Cursor</button> -->
+		<!-- <br /> -->
+		<!-- Cursors: <span id="cursors">0</span> -->
+		<!-- <br /> -->
+		<!-- Cursor Cost: <span id="cursorCost">10</span> -->
+		<!-- <script type="text/javascript" src="main.js"></script> -->
+	<!-- </body> -->
+<!-- </html> -->
+
+
+
+
+
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		
+		
+		<script src="vendor/nodeunit/examples/browser/nodeunit.js"></script>
+		<script src="index.js"></script>
+		<link rel="stylesheet" href="./vendor/nodeunit/share/nodeunit.css"/>
+
+		<title>Incremental Life</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="css/bootstrap.css" rel="stylesheet">
+		<script src="lootrtable.js"></script>
+	</head>
+
+
+	
+	<body>
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+		  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <a class="navbar-brand" href="#">Incremental Life</a>
+		  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+			  <a class="nav-item nav-link active" href="#" onClick="ShowMainPage()">Home <span class="sr-only">(current)</span></a>
+			  <a class="nav-item nav-link" href="#" onClick="ShowCraftPage()" id="CraftPageUnlocked">Crafting</a>
+			  <a class="nav-item nav-link" href="#" onClick="ShowCombatPage()" id="CombatPageUnlocked">Combat</a>
+			  <a class="nav-item nav-link disabled" href="#">Disabled</a>
+              <a class="nav-item nav-link" id="NavSaveButton">Save</a>
+              <a class="nav-item nav-link" id="NavLoadButton">Load</a>
+              </div>
+		  </div>
+		</nav>
+
+		<div class="container" id="GUI_MainPage">
+		  <div class="row">
+			<div class="col-4" id=GUI_MainPage_Left>
+				<h1>Statistics</h1>
+				Intelligence: <span id="intelligence">0</span>/<span class="player.maxint">0</span>
+				<br />
+				Int. per sec.: <span id="intps">0</span>
+				<br/>
+				Braincells: <span id="braincells">0 ?</span>
+				<br />
+				Focus: <span id="player.focus">0</span>	
+				<br />
+				<br />
+				<bold>Energy</bold>: <progress id="energy" value="100" max="100"></progress> <br /> Energy Numeric: <span id="energynum"> 0</span>%<br />
+				<br />
+				Food: <span id="food">0</span>
+				<br />
+				<div id="woodandstonesreq">
+					Stones: <span id="stones"> 0 </span>
+					<br />
+					
+				</div>				
+			</div>
+			<div class="col-4">
+				<h1>Actions</h1>
+                
+                
+                
+				<button type="button" class="btn btn-secondary btn-sm" onClick="Think(1)">Think</button>
+				<br />
+				<button type="button" class="btn btn-secondary btn-sm"  id="buybc" disabled="true" onClick="buyBraincell()">Generate Braincells</button> Cost: <span id="braincellCost">10</span> Intelligence
+				<br />
+				<button type="button" class="btn btn-secondary btn-sm"  id="Look" onClick="LookAround(1)">Focus</button>
+				<br />
+                    <a class="focusdesc actiondesc" >Focus your intelligence. Cost: <span id="focusCost"> 50</span> Intelligence.</a>
+				<button type="button" class="btn btn-secondary btn-sm"  id="WanderUnlocked" onClick="Wander()">Wander</button>
+				<br >
+				<button type="button" class="btn btn-secondary btn-sm"  id="ForageUnlocked" onClick="Forage(10)">Forage</button>
+				<br />
+				
+			</div>
+			<div class="col-4" id="messageboxID">
+			  
+				
+				You wake up, but can't seem to move your body or open your eyes!<br />---<br />
+				<p id="myLog"></p>
+				
+
+			</div>
+		  </div>
+
+		</div>
+		
+		
+		<br />
+		
+		
+		<br />
+		
+		<!--CraftPage-->
+		
+		<div class="container" id="GUI_CraftPage" style="display: none;">
+			<div class="row">
+				<div class="col-4" id="GUI_CraftPage_Left">
+					<h1>Tools</h1>
+					<button type="button" class="btn btn-secondary btn-sm"  onClick="ChopWood()">Chop wood into planks</button> Time Left: <span id="ChopTime"> x </span>
+					<br />
+					<button type="button" class="btn btn-secondary btn-sm"  onclick="craftSpear()">Make Wooden Spear</button> Cost: 50 wood, 25 stones
+					<br />
+					<input type="button" class="button" onClick="makeMoney()" id="makeMoney" value="Action">
+                    
+					
+					<div id="divfillmeUp" style="width:100%">
+					</div>
+				</div>
+				<div id="GUI_CraftPage_2" class="col-4">
+					<h1>Inventory</h1>
+						Stones: <span class="stones">x</span><br />
+						Wood: <span class="wood">x</span><br />
+					<br />
+					<span id="">---</span>
+				</div>
+				<div id="GUI_CraftPage_3" class="col-4">
+					<div id="craftLog">
+						You hands are itching, ready to craft!<br />---<br />
+						<p></p>
+					</div>
+					
+				</div>
+			</div>
+		</div>	
+			
+			
+			
+		<!--Combat Page-->
+		<div class="container" id="GUI_CombatPage" style="display: none;">
+			<div class="row">
+				<div class="col-4" id="GUI_CombatPage_Left">
+				<h3>Equipment and Stats</h3>
+					HP: <span id="player.hp">0</span>/<span id="player.maxhp">0</span>
+					<br />
+					Attack Rating: <span id="player.atkrating">0</span>
+					<br />
+					<h3 >Inventory</h3>
+					<div class="scrollable">
+						<br/> <span id="HUD_inv_1" > x </span><br />
+					</div>
+                    <div class="scrollable">
+                        <h3>Equipped Items</h3> <span id="HUD_eqp_1"></span><br />
+                        <br />
+                        Main Hand: <span id="player.mHand.name">x</span> <br /> Weapon Damage: <span id="player.mHand.weaponAtk"> x </span>
+                    </div>
+				</div>
+				<div class="col-4" >
+					<h3>Worldmap</h3>
+				
+					Name: <span id="monster.name">Monster Name</span>       Level: <span id="monster.level">0</span>
+					<br />
+					Type : <span id="monster.breed"> Monster Breed</span>
+					HP: <span id="monster.hp">0</span>/<span id="monster.maxhp">0</span>
+					
+					<br />
+					<hr>
+					<button type="button" class="btn btn-secondary btn-sm"  onclick="startFight()">Look for a fight</button><br />
+					<button type="button" class="btn btn-secondary btn-sm"  onclick="attackMonster()">Attack!</button>
+				
+				</div>
+				<div class="col-4">
+					<div id="combatLog" class="autoscroll">You feel your bloodlust awaken!<br />---<br />
+				    </div>
+                </div>
+
+            </div>
+        </div>
+        
+    
+      <footer class="footer">
+      <div class="container">
+        <span class="text-muted">
+          <button onClick="save()">Save</button>
+			<button onClick="load()">Load</button>
+          </span>
+      </div>
+    </footer>
+
+<!--  TOOLTIPS-->
+
+<div id="save_message" class="popup_msg">
+   Saved!
+</div>
+
+
+
+
+
+
+		
+		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+		<script src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="main.js"></script>
+        
+        
+	</body>
+
+</html>
