@@ -602,7 +602,7 @@ function ActionCheck() {
 	else {
 		$("#ForageUnlocked").hide();
 	}
-	if (player.focus > 5 && braincells > 25) {
+	if (player.focus > 1 && braincells > 5) {
 		// document.getElementById("CraftPageUnlocked").classList.add('nav-item nav-link');
 		$("#CraftPageUnlocked").show();
 	}
