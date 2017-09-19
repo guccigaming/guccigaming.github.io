@@ -23,13 +23,18 @@ font: 14px Verdana, Arial, Helvetica, sans-serif;
 display:none;
 }
 
+#statstable{
+    font-size:25%;
+}
+
 #GUI_MainPage{
     border-style: double;
     padding-left: 15px;
 }
 
 #GUI_MainPage_Left{
-    border-right-style: double; 
+    border-right-style: double;
+    
 }
 
 #GUI_CraftPage{
@@ -2271,9 +2276,10 @@ pre code {
 
 .table th,
 .table td {
-  padding: 0.75rem;
+  padding: 0.15rem;
   vertical-align: top;
   border-top: 1px solid #eceeef;
+  font-size: 80%;
 }
 
 .table thead th {
