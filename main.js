@@ -350,7 +350,7 @@ function Wander(){
 					Message();
 			}
 		
-		}else (){
+		}else{
 			message="I scout out the area, but find nothing of use."
 			Message();
 		};
