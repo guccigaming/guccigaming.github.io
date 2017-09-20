@@ -79,6 +79,7 @@ var itemDB = {
 
 var player = {
 	name : "Gucci",
+	intgainmodifier : 1.0,
 	hp : 300,
 	maxhp : 300,
 	gold : 0,
@@ -330,9 +331,9 @@ function Wander(){
 		energy.value -= 10;
 		var rng = randomIntFromInterval(0,10);
 		var rng2 = randomIntFromInterval(0,10);
-		if (rng > 3) {
-			WSReq = 1;
-			if(rng2 > 4) {
+		if (rng > 4) {
+			if (rng2 > 4) {
+				WSReq = 1;
 				wandergain = randomIntFromInterval(0,10);
 				wood += wandergain;
 				var msg1 = "You gained"
@@ -341,13 +342,18 @@ function Wander(){
 				Message();	
 				} else { 
 					wandergain = randomIntFromInterval(0,10);
+					WSReq = 1;
 					var msg1 = "You gained"
 					var msg2 = "stones!<br />"				
 					message = msg1 + " " + wandergain + " " + msg2
 					stones += wandergain;
 					Message();
 			}
-		}
+		
+		}else (){
+			message="I scout out the area, but find nothing of use."
+			Message();
+		};
 	}
 	// document.getElementById("WSReq").innerHTML = WSReq;	
 };
