@@ -96,11 +96,16 @@ var player = {
 	blacksmithProf : 0,
 	mHand : loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0],
     maxint : 50,
-    focus : 0
+	focus : 0,
+	buildingmatmultiplier : 1,
+	storagespace : 0,
+	storagemax : 500,
+	woodenplanks : 0
 	// get atkrating () {
     // return  this.inventory.weapons.atkrating;
   // }
 };
+
 
 
 
@@ -180,6 +185,29 @@ function equipItem(x) {
 	
 	// loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand				//add item to equipslotx
 		
+};
+
+
+function GainWoodenPlanks(number){
+	var x = number * player.buildingmatmultiplier 
+	player.woodenplanks += x
+};
+
+function craftWoodenPlank(number) {
+	if(wood > 19){
+		wood -= 20
+		GainWoodenPlanks(number);
+		message = "I got " + number * player.buildingmatmultiplier + " wooden plank(s)!<br />";
+		Message();
+		document.getElementById("InvWoodenPlanks").innerHTML = player.woodenplanks
+	}
+	else {
+		message = "I don't have enough wood.. <br />";
+		Message();
+
+
+	};
+
 };
 
 
@@ -351,10 +379,10 @@ function Wander(){
 			}
 		
 		}else{
-			message="I scout out the area, but find nothing of use."
+			message="I scout out the area, but find nothing of use.<br />"
 			Message();
 		};
-	}
+	};
 	// document.getElementById("WSReq").innerHTML = WSReq;	
 };
 
@@ -664,8 +692,8 @@ function InvCheck() {
 	document.getElementsByClassName("stones")[0].innerHTML = stones;
     document.getElementsByClassName("player.maxint")[0].innerHTML = player.maxint;
     document.getElementsByClassName("focusCost")[0].innerHTML = upgradeCost.nextFocus;
-	
-	
+	document.getElementById("player.storagespace").innerHTML = player.storagespace;
+	document.getElementById("player.storagemax").innerHTML = player.storagemax;
 	
 };
 // --BATTLE--
@@ -710,8 +738,12 @@ function attackMonster() {
 
 
 //LOOP
+
+
 window.setInterval(function(){
 	
+
+	player.storagespace = wood + player.woodenplanks + stones + food
 	Think(braincells*0.25);
 	StatCheck();
 	InvCheck();
@@ -719,12 +751,12 @@ window.setInterval(function(){
 	intpscheck();
 	WSReqCheck();
 	ERegenPass(1);
-	forageTimer -= 1;
+	if(forageTimer > 1){forageTimer -= 1;}
 //	ItemNameCheck();
 	rngcolorgen();
 	InvNames();
 	GetPlayerAtkRt();
-
+	
 	
 }, 1000);
 

@@ -1,25 +1,3 @@
-<!-- <html> -->
-	<!-- <head> -->
-		<!-- <link rel="stylesheet" type="text/css" href="interface.css" /> -->
-	<!-- </head> -->
-	<!-- <body> -->
-		<!-- <button onclick="cookieClick(1)">Click Me!</button> -->
-		<!-- <br /> -->
-		<!-- Cookies: <span id="cookies">0</span> -->
-		<!-- <br /> -->
-		<!-- <button onclick="buyCursor()">Buy Cursor</button> -->
-		<!-- <br /> -->
-		<!-- Cursors: <span id="cursors">0</span> -->
-		<!-- <br /> -->
-		<!-- Cursor Cost: <span id="cursorCost">10</span> -->
-		<!-- <script type="text/javascript" src="main.js"></script> -->
-	<!-- </body> -->
-<!-- </html> -->
-
-
-
-
-
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -45,7 +23,7 @@
 
 	
 	<body>
-		<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+		<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
 		  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		  </button>
@@ -149,17 +127,40 @@
 		
 		<!--CraftPage-->
 		
-		<div class="container" id="GUI_CraftPage" style="display: none;">
+		<div id="GUI_CraftPage" style="display: none;">
 			<div class="row">
 				<div class="col-4" id="GUI_CraftPage_Left">
 					<h1>Tools</h1>
 					<button type="button" class="btn btn-secondary btn-sm"  onclick="craftSpear()">Make Wooden Spear</button> Cost: 50 wood, 25 stones
 					<br />
+					<button type="button" class="btn btn-secondary btn-sm"  onclick="craftWoodenPlank(1)">Make Wooden Plank</button> Cost: 20 wood
 				</div>
 				<div id="GUI_CraftPage_2" class="col-4">
 					<h1>Inventory</h1>
-						Stones: <span class="stones">x</span><br />
-						Wood: <span class="wood">x</span><br />
+					<div style="height:200px;overflow-y:scroll;">
+						Stones: <span class="stones">0</span><br />
+						Wood: <span class="wood">0</span><br />
+						Wooden Planks: <a id="InvWoodenPlanks">0</a>
+					</div>
+						<br /><br /><br />
+						<hr>
+						Total resources in storage: <br />
+						                                                                                    
+							<div class="table" id="statstable">          
+							<table class="table">
+							  <thead>
+							  </thead>
+							  <tbody>
+								  <tr>
+									  <td>ALL: <span id="player.storagespace">0</span> </td>
+								  
+									  <td>Max: <a id="player.storagemax">0</a></td>
+								  </tr>
+								</tbody>
+								</table>
+								</div>
+						
+
 					<br />
 					
 				</div>
@@ -216,15 +217,7 @@
             </div>
         </div>
         
-    
-      <footer class="footer">
-      <div class="container">
-        <span class="text-muted">
-          <button onClick="save()">Save</button>
-			<button onClick="load()">Load</button>
-          </span>
-      </div>
-    </footer>
+
 
 <!--  TOOLTIPS-->
 
