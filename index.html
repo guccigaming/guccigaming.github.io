@@ -34,7 +34,7 @@
 			<div class="navbar-nav">
 			  <a class="nav-item nav-link active" href="#" onClick="ShowMainPage()">Home <span class="sr-only">(current)</span></a>
 			  <a class="nav-item nav-link" href="#" onClick="ShowCraftPage()" id="CraftPageUnlocked">Crafting</a>
-			  <a class="nav-item nav-link" href="#" onClick="ShowCombatPage()" id="CombatPageUnlocked">Combat</a>
+			  <a class="nav-item nav-link" href="#" onClick="ShowCombatPage()" id="CombatPageUnlocked" style=" text-shadow: 0 0 3px #FF0000; ">Combat </a>
 			  <a class="nav-item nav-link" href="#" onClick="ShowWorldPage()" id="WorldPageUnlocked">World</a>
 			  <a class="nav-item nav-link disabled" href="#">Disabled</a>
               <a class="nav-item nav-link" id="NavSaveButton">Save</a>
@@ -42,15 +42,18 @@
               </div>
 		  </div>
 		</nav>
-
+		<br />
 		<div class="container" id="GUI_MainPage">
 		  <div class="row">
 			<div class="col-4" id=GUI_MainPage_Left>
-				<a style="font-style:italic;">Statistics</a>
-					<br />
+
+				<!-- Old stats, might reuse, probably not.. -->
+				
+				<!-- <a style="font-style:italic;">Statistics</a> -->
+					<!-- <br />
 					
-					<br />
-                    <div class="container" >                                                                                     
+					<br /> -->
+                    <div class="container" style="display:none">                                                                                     
                       <div class="table-responsive" id="statstable">          
                       <table class="table">
                         <thead>
@@ -84,17 +87,29 @@
 
 					</div>
 					<div>
-											  
+						<div id="playerinfo">
+							Name: <span id="player.name"></span>
+							<br />
+							Cultivation Rank: Level <span id="cLevel"></span> of <span id="cRankName"></span>
+							<br />
+						</div>
+						<br / >					  
 						<a style="font-style:italic;">Body Stats</a>
 						<br />
 						<table>
 							<thead></thead>
 							<tbody>
-								<span id="HUD_PlayerStats" style="font-size:80%;"></span>
+								<span id="HUD_PlayerBodyStats" style="font-size:80%;"></span>
 							</tbody>
 						</table>
 					</div>
 				<br />
+					<a style="font-style:italic;">Spirit Stats</a>
+					<br />
+					<div>
+						<span id="HUD_PlayerSpiritStats" style="font-size:80%;"></span>
+					</div>
+					<br />
                         <div >
 <!--                            Intelligence: <span id="intelligence" >0</span>/<span class="player.maxint">0</span> &nbsp;&nbsp; +<span id="intps" style="right">0</span> -->
                             
@@ -114,22 +129,33 @@
 				<br />
 				<br />
 
-				<button type="button"  id="TrainBodyButton" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#TrainBodyTooltip">Train Body</button> <br />
-                
-                
-                
-				<button type="button" class="btn btn-secondary btn-sm" onClick="Think(1)">Think</button>
+				<!-- Actions -->
+
+
+				<button type="button"  id="TrainBodyButton" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#TrainBodyTooltip">Train Body</button> 
 				<br />
-				<button type="button" class="btn btn-secondary btn-sm"  id="buybc" disabled="true" onClick="buyBraincell()">Generate Braincells</button> Cost: <span id="braincellCost">10</span> Intelligence
-				<br />
-				<button type="button" class="btn btn-secondary btn-sm"  id="Look" onClick="Focus(1)">Focus</button>
-				<br />
-                    <a class="focusdesc actiondesc" >Focus your intelligence. Cost: <span class="focusCost"> 50</span> Intelligence.</a>
-				<button type="button" class="btn btn-secondary btn-sm"  id="WanderUnlocked" onClick="Wander()">Wander</button>
-				<br >
-				<button type="button" class="btn btn-secondary btn-sm"  id="ForageUnlocked" onClick="Forage(10)">Forage</button>
+				<button type="button" id="condenseSPButton" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#CondenseSPTooltip">Condense soulpower</button>
 				<br />
 				
+				<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#WanderTooltip"  onClick="Wander()">Wander</button>
+				<br >
+				<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#ForageTooltip"  onClick="Forage(10)">Forage</button>
+
+				
+				<!-- old buttons-->
+                <div id="oldbuttons" style="display:none">
+					<button type="button" class="btn btn-secondary btn-sm" onClick="Think(1)">Think</button>
+					<br />
+					<button type="button" class="btn btn-secondary btn-sm"  id="buybc" disabled="true" onClick="buyBraincell()">Generate Braincells</button> Cost: <span id="braincellCost">10</span> Intelligence
+					<br />
+					<button type="button" class="btn btn-secondary btn-sm"  id="Look" onClick="Focus(1)">Focus</button>
+					<br />
+						<a class="focusdesc actiondesc" >Focus your intelligence. Cost: <span class="focusCost"> 50</span> Intelligence.</a>
+					<button type="button" class="btn btn-secondary btn-sm"  id="WanderUnlocked" onClick="Wander()">Wander</button>
+					<br >
+					<button type="button" class="btn btn-secondary btn-sm"  id="ForageUnlocked" onClick="Forage(10)">Forage</button>
+					<br />
+				</div>
 			</div>
 			<div class="col-4" id="messageboxID">
 			  
@@ -144,14 +170,11 @@
 		</div>
 		
 		
-		<br />
-		
-		
-		<br />
+
 		
 		<!--CraftPage-->
 		
-		<div id="GUI_CraftPage" style="display: none;">
+		<div id="GUI_CraftPage" style="display: none;" class="container">
 			<div class="row">
 				<div class="col-4" id="GUI_CraftPage_Left">
 					<h1>Tools</h1>
@@ -231,6 +254,8 @@
 					<hr>
 					<button type="button" class="btn btn-secondary btn-sm"  onclick="startFight()">Look for a fight</button><br />
 					<button type="button" class="btn btn-secondary btn-sm"  onclick="attackMonster()">Attack!</button>
+					<br />
+					<button type="button" class="btn btn-secondary btn-sm"  onclick="RestPlayer()">Rest</button>
 				
 				</div>
 				<div class="col-4">
@@ -242,7 +267,7 @@
         </div>
 		
 		<!-- World Page -->
-		<div class="container" id="GUI_WorldPage">
+		<div class="container" id="GUI_WorldPage" style="display:none;">
 			Mysterious Forest
 			
 
@@ -257,8 +282,25 @@
 <div class="tooltip_templates">
     <span id="TrainBodyTooltip" style="font-size:75%;">
         Gain +0.05 to one randomly chosen body stat.
-    </span>
+	</span>
+	
+	<span id="CondenseSPTooltip" style="font-size:75%;">
+        Condense 50 soulpower into 1 ki.
+	</span>
+	
+	<span id="WanderTooltip" style="font-size:75%;">
+		Wander around and try to find some resources.
+		<br />
+		<span style="font-size:70%;font-style:italic;text-align:right;">There should be a better way to get resources..</span>
+	</span>
+
+	<span id="ForageTooltip" style="font-size:75%;">
+        Gain some food to boost energy regen rate.
+	</span>
+
 </div>
+
+
 
 
 

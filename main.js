@@ -42,7 +42,7 @@ var WSReq = 0;
 var wood = 0;
 var stones = 0;
 var wandergain = 0;
-
+var braincellNextCost = 0;
 
 
 var dead = false;
@@ -74,14 +74,18 @@ loot.setModifiers([
 
 var player = {
 	name : "Gucci",
+	cRank : 0,
 	intgainmodifier : 1.0,
 	//BODY-STATS
 	bodystats : {strength:1.00,dexterity:1.00,intelligence:1.00},
+	spiritstats : {ki:0},
+	hiddenstats : {SPcondensed : 0},
 	hp : 300,
 	maxhp : 300,
 	gold : 0,
 	xp : 0,
-	level : 1,
+	cRank : 0,
+	cLevel : 1,
 	x : 50,
 	y : 0,
 	dead : false,
@@ -100,6 +104,18 @@ var player = {
 	woodenplanks : 0
 };
 
+//RANKNAMES
+// cRank 0 = Earthly Body
+// cRank 1 = Foundation Building
+// more to add
+
+var cRankNames = ["Earthly Body", "Foundation Building"]
+
+function getLevelRank(){
+		document.getElementById("player.name").innerHTML = player.name;
+		document.getElementById("cRankName").innerHTML = cRankNames[player.cRank];
+		document.getElementById("cLevel").innerHTML = player.cLevel;
+}
 
 
 
@@ -150,14 +166,22 @@ function GetPlayerBodyStats(){
 		var bodystatsNames = Object.keys(player.bodystats);
 		statname = Object.keys(player.bodystats)[i]
 		text += "<br />" + statname + " : " + prettify(Object.values(player.bodystats)[i]);
-	
-	
-	
-		
-		// var text = "<tr><td>" + player.bodystats[i] + "\" \"</td><td><span id=\"intelligence\">0</span>/<span class=\"player.maxint\">0</span></td><td>+<span id=\"intps\">0</span></td></tr>";
-
 	}
-	document.getElementById("HUD_PlayerStats").innerHTML = text;
+	document.getElementById("HUD_PlayerBodyStats").innerHTML = text;
+}
+
+
+//Create Player Spirit Stats on Home Page
+function GetPlayerSpiritStats(){
+	var text = "";
+	var i;
+	for(i = 0; i < Object.keys(player.spiritstats).length; i++) {
+		var spiritstatsNames = Object.keys(player.spiritstats);
+		statname = Object.keys(player.spiritstats)[i]
+		text += "<br />" + statname + " : " + prettify(Object.values(player.spiritstats)[i]);
+	}
+	document.getElementById("HUD_PlayerSpiritStats").innerHTML = text;
+
 }
 
 
@@ -178,7 +202,12 @@ var HUD_eqp_1 = 0;
 
 
 
-$( "#TrainBodyButton" ).click(function() {
+//JQuery Actions
+$(document).ready(function() {
+
+//TrainBody
+
+	$( "#TrainBodyButton" ).click(function() {
 	var rng = randomIntFromInterval(1,3);
 	if(rng == 1){
 		player.bodystats.strength += 0.05;
@@ -199,6 +228,25 @@ $( "#TrainBodyButton" ).click(function() {
 
   });
 
+});
+
+//Condense Soul Power
+
+
+$( "#condenseSPButton" ).click(function() {
+	if(player.spiritstats.soulpower > 50){
+		player.spiritstats.soulpower -= 50;
+		player.hiddenstats.SPcondensed += 1;
+		message = "Condensed 50 soulpower into 1 ki."
+	}
+	else{
+		message = "I don't have enough ki.. <br />";
+		Message();
+	};
+	
+  
+
+});
 	
 function equipItem(x) {
 	 var invSlotIDNr = x;
@@ -379,6 +427,10 @@ function ERegenPass(number){
 			food = food - 0.25;
 			document.getElementById("food").innerHTML = food;
 		}
+	else(food < 1 && energynum < 100)
+	let energy = document.getElementById("energy");
+	energy.value += number * 0.1;
+		
 	 // else if(energy = 100) {
 		// message = "You are full!<br />"
 		// Message();
@@ -473,24 +525,28 @@ $(document).ready(function(){
 //startfight
 
 function startFight(){
+	if(player.hp < 25){
+		message = "I need to recover more HP! <br />"
+		Message()
+	}
+	else{
 	var maxhp = randomIntFromInterval(150,200)
 	monster = {
-		hp : maxhp,
-		maxhp : maxhp,
-		level : 1,
-		drops : 0, //add drops from lootrtable
-		atkrating : randomIntFromInterval(5,15),
-		armor : 0,
-		name : "Test Monster",
-		breed : "Orc"
-		};
-	document.getElementById("monster.maxhp").innerHTML = monster.maxhp;
-	document.getElementById("monster.hp").innerHTML = monster.hp;
-	document.getElementById("monster.level").innerHTML = monster.level;
-	document.getElementById("monster.breed").innerHTML = monster.breed;
-	document.getElementById("monster.name").innerHTML = monster.name;
-
-	
+			hp : maxhp,
+			maxhp : maxhp,
+			level : 1,
+			drops : {soulpower : player.spiritstats.ki * 2}, //add drops from lootrtable
+			atkrating : randomIntFromInterval(5,15),
+			armor : 0,
+			name : "Test Monster",
+			breed : "Orc"
+			};
+		document.getElementById("monster.maxhp").innerHTML = monster.maxhp;
+		document.getElementById("monster.hp").innerHTML = monster.hp;
+		document.getElementById("monster.level").innerHTML = monster.level;
+		document.getElementById("monster.breed").innerHTML = monster.breed;
+		document.getElementById("monster.name").innerHTML = monster.name;
+	}
 };
 
 //get player total attackrate
@@ -531,65 +587,49 @@ function randomIntFromInterval(min,max)
     return Math.floor(Math.random()*(max-min+1)+min);
 }
 
-function ShowCraftPage() {
-	$("#GUI_MainPage").hide();
-	$("#GUI_CraftPage").show();
-	$('#GUI_CombatPage').hide();
-	$('#GUI_WorldPage').hide();
-}
 
-function ShowCombatPage() {
-	$('#GUI_CraftPage').hide();
-	$("#GUI_MainPage").hide();
-	$("#GUI_CombatPage").show();
-	$('#GUI_WorldPage').hide();
-}		
 
-function ShowMainPage() {
-	$('#GUI_CraftPage').hide();
-	$('#GUI_MainPage').show();
-	$('#GUI_CombatPage').hide();	
-	$('#GUI_WorldPage').hide();
-}
+	function ShowCraftPage() {
+		$("#GUI_MainPage").hide();
+		$("#GUI_CraftPage").show();
+		$('#GUI_CombatPage').hide();
+		$('#GUI_WorldPage').hide();
+	};
 
-function ShowWorldPage() {
-	$('#GUI_WorldPage').show();
-	$('#GUI_CombatPage').hide();
-	$('#GUI_CraftPage').hide();
-	$("#GUI_MainPage").hide();
-}
+	function ShowCombatPage() {
+		$(document).ready(function(){
+			$('#GUI_CraftPage').hide();
+			$("#GUI_MainPage").hide();
+			$("#GUI_CombatPage").show();
+			$("#GUI_CombatPage").removeAttr("style");
+			$('#GUI_WorldPage').hide();
+		});
+	};		
+
+	function ShowMainPage() {
+		$('#GUI_CraftPage').hide();
+		$('#GUI_MainPage').show();
+		$('#GUI_CombatPage').hide();	
+		$('#GUI_WorldPage').hide();
+	};
+
+	function ShowWorldPage() {
+		$('#GUI_WorldPage').show();
+		$('#GUI_CombatPage').hide();
+		$('#GUI_CraftPage').hide();
+		$("#GUI_MainPage").hide();
+	;}
+
 
 //---TOOLTIPS---
-$(document).ready(function() {
+$(document).ready(function(){
 	$('.tooltipster').tooltipster({
 		theme: 'tooltipster-borderless',
 		side: 'right'
 	});
-});
-
-
-// $(document).ready(function(){
-//     $('[data-toggle="tooltip"]').tooltip();
-// });
-
-
-// function GUI_Switch() {
-	// if (GUI.MainScreen == MainPage ){
-		// $('#GUI_MainPage').show();
-	// }
-	// else if (GUI.MainScreen == CraftPage ){
-		// $('#GUI_MainPage').hide();
-		// $('#GUI_CraftPage').show();
-
-	// }
-	// else {
-		// $('#GUI_MainPage').hide();
-	// }
-// };
-
+})
 
 //--Message stuff--
-
 
 function Message(){
 	document.getElementById("myLog").innerHTML+=message;
@@ -629,7 +669,7 @@ function saveitems(){
 };
 
 function loaditems(){
-    loot.equipment = JSON.parse(localStorage.getItem("saveitems"));
+    loot.branchs.equipment = JSON.parse(localStorage.getItem("saveitems"));
 };
 
 
@@ -718,13 +758,19 @@ function ActionCheck() {
 	else {
 		$("#ForageUnlocked").hide();
 	}
-	if (player.focus > 1 && braincells > 5) {
+	if (player.spiritstats.ki > 1) {
 		// document.getElementById("CraftPageUnlocked").classList.add('nav-item nav-link');
-		$("#CraftPageUnlocked").show();
+		$(document).ready(function(){	
+			$("#CraftPageUnlocked").show();
+			$("#CombatPageUnlocked").show();
+		});
 	}
 	else {
 		// document.getElementById("CraftPageUnlocked").classList.add('nav-item nav-link disabled');
-		$("#CraftPageUnlocked").hide();
+		$(document).ready(function(){
+			$("#CraftPageUnlocked").hide();
+			$("#CombatPageUnlocked").hide();
+		});
 	}	
 };	
 
@@ -738,11 +784,27 @@ function WSReqCheck() {
 };
 
 function StatCheck() {
-	if(intelligence < braincellCost) {
+	if(intelligence < braincellCost) {		//Disable buy braincell button
             document.getElementById('buybc').disabled = true;
         } else {
             document.getElementById('buybc').disabled = false;
-        };
+		};
+	
+		//player ki check
+	player.spiritstats.ki = Math.floor((player.bodystats.strength + player.bodystats.strength + player.bodystats.intelligence)/10) + player.hiddenstats.SPcondensed;
+
+	if(player.spiritstats.ki > 0){
+		if(isNaN(player.spiritstats.soulpower) == true ){
+			player.spiritstats.soulpower = 0.05
+		}
+		
+		if(player.spiritstats.soulpower < player.spiritstats.ki * 50)
+		player.spiritstats.soulpower = player.spiritstats.soulpower + Number(player.spiritstats.ki) * 0.05;
+		
+	}
+
+
+
 };
 
 function InvCheck() {
@@ -768,36 +830,58 @@ function InvCheck() {
 };
 // --BATTLE--
 
-function attackMonster() {
-	if(monster.hp > 0){
-		var playermindamage = Math.floor( parseInt(player.atkrating) + 1.2 * player.level - parseInt(player.armor) ) * 0.8
-		var playermaxdamage = Math.floor( parseInt(player.atkrating) + 1.2 * player.level - parseInt(player.armor) ) * 1.2
-		var monstermaxdamage = Math.floor(parseInt(monster.atkrating) + 1.2 * monster.level - parseInt(player.armor)) * 1.2
-		var monstermindamage = Math.floor(parseInt(monster.atkrating) + 1.2 * monster.level - parseInt(player.armor)) * 0.8
-		// message = playerdamage + "testing </br>"
-		// Message();
-		var playerdamage = randomIntFromInterval(playermindamage,playermaxdamage)
-		var monsterdamage = randomIntFromInterval(monstermindamage,monstermaxdamage)
-		
-		message = player.name + " attacked " + monster.name + " for " + playerdamage + " damage! <br />";
-		Message ();
-		message = monster.name + " attacked " + player.name + " for " + monsterdamage + " damage! <br />";
+function RestPlayer(){
+	if(player.hp < player.maxhp){
+		player.hp += 50;
+		if(player.hp > player.maxhp){
+			player.hp = player.maxhp;
+				}
+	}
+	else{
+		message = "I can't rest more than this.. <br />";
 		Message();
-		
-		player.hp -= monsterdamage;
-		monster.hp -= playerdamage;
-		
-		document.getElementById("monster.hp").innerHTML = monster.hp
-		if(monster.hp < 0){
-			message = "You killed the " + monster.name + "<br />"
-			Message();
-			startFight();
-			message = "You found a new monster: " + monster.name + "<br />"
-			Message();
-		};
 	};
 
+}
+
+
+function attackMonster() {
+	if(player.hp < 25){
+		message = "I think I might need some more health to fight.. <br />"
+		Message();
+	}
+	else{
+
+		
+		if(monster.hp > 0){
+			var playermindamage = Math.floor( parseInt(player.atkrating) + 1.2 * player.cLevel - parseInt(player.armor) ) * 0.8
+			var playermaxdamage = Math.floor( parseInt(player.atkrating) + 1.2 * player.cLevel - parseInt(player.armor) ) * 1.2
+			var monstermaxdamage = Math.floor(parseInt(monster.atkrating) + 1.2 * monster.level - parseInt(player.armor)) * 1.2
+			var monstermindamage = Math.floor(parseInt(monster.atkrating) + 1.2 * monster.level - parseInt(player.armor)) * 0.8
+			var playerdamage = randomIntFromInterval(playermindamage,playermaxdamage)
+			var monsterdamage = randomIntFromInterval(monstermindamage,monstermaxdamage)
+			
+			message = player.name + " attacked " + monster.name + " for " + playerdamage + " damage! <br />";
+			Message();
+			message = monster.name + " attacked " + player.name + " for " + monsterdamage + " damage! <br />";
+			Message();
+			
+			player.hp -= monsterdamage;
+			monster.hp -= playerdamage;
+			
+			document.getElementById("monster.hp").innerHTML = monster.hp
+			if(monster.hp < 0){
+				player.spiritstats.soulpower += monster.drops.soulpower
+				message = "You killed the " + monster.name + "<br />" + "You got " + monster.drops.soulpower + "soulpower! </br>"
+				Message();
+				startFight();
+				message = "You found a new monster: " + monster.name + "<br />"
+				Message();
+			};
+		};
+	};
 };
+
 
 
 // Monster Function
@@ -810,10 +894,12 @@ function attackMonster() {
 //LOOP
 
 
+
+
 window.setInterval(function(){
 	
 
-	player.storagespace = wood + player.woodenplanks + stones + food
+	player.storagespace = wood + player.woodenplanks + stones + food;
 	Think(braincells*0.25);
 	StatCheck();
 	InvCheck();
@@ -827,6 +913,7 @@ window.setInterval(function(){
 	InvNames();
 	GetPlayerAtkRt();
 	GetPlayerBodyStats();
+	GetPlayerSpiritStats();
+	getLevelRank();
 	
 }, 250);
-

@@ -14,7 +14,8 @@
 }
 
 html body{
-  background-color: #BDBDBD !important; 
+  background-color: #7E7E7E !important;
+  /* font-family: "Verdana, sans-serif"  */
 }
 
 .popup_msg{
@@ -40,33 +41,33 @@ display:none;
 }
 
 #GUI_MainPage{
-    border-style: double;
+    /* border-style: double; */
     padding-left: 15px;
     margin-top: 5px;
 }
 
 #GUI_MainPage_Left{
-    border-right-style: double;
+    /* border-right-style: double; */
     
 }
 
 #GUI_CraftPage{
-    border-style: double;
+    /* border-style: double; */
     padding-left: 15px;
-    margin: 5px;
+    /* margin: 5px; */
 }
 
 #GUI_CraftPage_Left{
-    border-right-style: double;
+    /* border-right-style: double; */
 }
 
 #GUI_CombatPage{
-    border-style: double;
-    padding-left: 15px;
+    /* border-style: double; */
+    padding-left: 5px;
 }
 
 #GUI_CombatPage_Left{
-    border-right-style: double;
+    /* border-right-style: double; */
 }
 
 
