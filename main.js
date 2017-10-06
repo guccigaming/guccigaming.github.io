@@ -70,16 +70,13 @@ loot.setModifiers([
 
 //--OBJECTS
 
-//itemcategories
-var itemcat = ["Swords", "Armor"];
 
-var itemDB = {
-	itemID : [],
-};
 
 var player = {
 	name : "Gucci",
 	intgainmodifier : 1.0,
+	//BODY-STATS
+	bodystats : {strength:1.00,dexterity:1.00,intelligence:1.00},
 	hp : 300,
 	maxhp : 300,
 	gold : 0,
@@ -101,9 +98,6 @@ var player = {
 	storagespace : 0,
 	storagemax : 500,
 	woodenplanks : 0
-	// get atkrating () {
-    // return  this.inventory.weapons.atkrating;
-  // }
 };
 
 
@@ -146,6 +140,27 @@ function EquippedItemsList(){
 	
 };
 
+
+
+//Create Player Body Stats on Home page
+function GetPlayerBodyStats(){
+	var text = "";
+	var i;
+	for(i = 0; i < Object.keys(player.bodystats).length; i++) {
+		var bodystatsNames = Object.keys(player.bodystats);
+		statname = Object.keys(player.bodystats)[i]
+		text += "<br />" + statname + " : " + prettify(Object.values(player.bodystats)[i]);
+	
+	
+	
+		
+		// var text = "<tr><td>" + player.bodystats[i] + "\" \"</td><td><span id=\"intelligence\">0</span>/<span class=\"player.maxint\">0</span></td><td>+<span id=\"intps\">0</span></td></tr>";
+
+	}
+	document.getElementById("HUD_PlayerStats").innerHTML = text;
+}
+
+
 function EqpNames(){
 	var text = "";
 	var i;
@@ -160,6 +175,29 @@ var HUD_inv_1 = 0;
 var HUD_eqp_1 = 0;
 
 // -- ACTIONS --
+
+
+
+$( "#TrainBodyButton" ).click(function() {
+	var rng = randomIntFromInterval(1,3);
+	if(rng == 1){
+		player.bodystats.strength += 0.05;
+		message = "I gained 0.05 strength! <br />";
+		Message();
+	}
+	else if(rng == 2){
+		player.bodystats.dexterity += 0.05;
+		message = "I gained 0.05 dexterity! <br />";
+		Message();
+	}
+	else{
+		player.bodystats.intelligence += 0.05;
+		message = "I gained 0.05 strength! <br />";
+		Message();
+	}
+
+
+  });
 
 	
 function equipItem(x) {
@@ -248,7 +286,7 @@ function craftSpear() {
 function Think(number) {
     if(intelligence < player.maxint){
         intelligence = intelligence + number;
-        document.getElementById("intelligence").innerHTML = intelligence; 
+        document.getElementById("intelligence").innerHTML = Number(intelligence).toFixed(2); 
     };
 };
 
@@ -403,6 +441,13 @@ function Forage(number){
 
 //--FUNCS--
 
+//prettify
+function prettify(input){
+    var output = Math.round(input * 1000000)/1000000;
+	return output;
+}
+
+
 //save-load buttons navbar
 $(document).ready(function(){
     $("#NavSaveButton").click(function(){
@@ -490,19 +535,44 @@ function ShowCraftPage() {
 	$("#GUI_MainPage").hide();
 	$("#GUI_CraftPage").show();
 	$('#GUI_CombatPage').hide();
+	$('#GUI_WorldPage').hide();
 }
 
 function ShowCombatPage() {
 	$('#GUI_CraftPage').hide();
 	$("#GUI_MainPage").hide();
 	$("#GUI_CombatPage").show();
+	$('#GUI_WorldPage').hide();
 }		
 
 function ShowMainPage() {
 	$('#GUI_CraftPage').hide();
 	$('#GUI_MainPage').show();
 	$('#GUI_CombatPage').hide();	
+	$('#GUI_WorldPage').hide();
 }
+
+function ShowWorldPage() {
+	$('#GUI_WorldPage').show();
+	$('#GUI_CombatPage').hide();
+	$('#GUI_CraftPage').hide();
+	$("#GUI_MainPage").hide();
+}
+
+//---TOOLTIPS---
+$(document).ready(function() {
+	$('.tooltipster').tooltipster({
+		theme: 'tooltipster-borderless',
+		side: 'right'
+	});
+});
+
+
+// $(document).ready(function(){
+//     $('[data-toggle="tooltip"]').tooltip();
+// });
+
+
 // function GUI_Switch() {
 	// if (GUI.MainScreen == MainPage ){
 		// $('#GUI_MainPage').show();
@@ -576,7 +646,7 @@ function save(){
 		stones: stones,
 		WSReq: WSReq,
 		wood: wood,
-        upgradeCost: upgradeCost,
+		upgradeCost: upgradeCost
 //        loot : loot
 	}
 	localStorage.setItem("save",JSON.stringify(save)); 
@@ -601,13 +671,13 @@ function load(){
 	
 	
 	
-	document.getElementById("intelligence").innerHTML = intelligence;
-	document.getElementById("braincells").innerHTML = braincells;
+	document.getElementById("intelligence").innerHTML = Number(intelligence).toFixed(2);
+	document.getElementById("braincells").innerHTML = Number(braincells).toFixed(2);
 	document.getElementById("braincellCost").innerHTML = Math.floor(10 * Math.pow(1.1,braincells));
-	document.getElementById("player.focus").innerHTML = player.focus;
-	document.getElementById("food").innerHTML = food;
-	document.getElementById("stones").innerHTML = stones;
-	document.getElementsByClassName("wood").innerHTML = wood;
+	document.getElementById("player.focus").innerHTML = Number(player.focus).toFixed(2);
+	document.getElementById("food").innerHTML = Number(food).toFixed(2);
+	document.getElementById("stones").innerHTML = Number(stones).toFixed(2);
+	document.getElementsByClassName("wood").innerHTML = Number(wood).toFixed(2);
 
 }
 	
@@ -680,20 +750,20 @@ function InvCheck() {
 	let energy = document.getElementById("energy");
 	energynum = energy.value;
     document.getElementById("energynum").innerHTML = energynum;
-	document.getElementsByClassName("wood")[0].innerHTML = wood;
-	document.getElementById("stones").innerHTML = stones;
-	document.getElementById("player.atkrating").innerHTML = player.atkrating; 
+	document.getElementsByClassName("wood")[0].innerHTML = Number(wood).toFixed(2);
+	document.getElementById("stones").innerHTML = Number(stones).toFixed(2);
+	document.getElementById("player.atkrating").innerHTML = Number(player.atkrating).toFixed(2); 
 	document.getElementById("player.hp").innerHTML = player.hp;
 	document.getElementById("player.maxhp").innerHTML = player.maxhp;
 	document.getElementById("HUD_inv_1").innerHTML = HUD_inv_1;
 	document.getElementById("player.atkrating").innerHTML = player.atkrating;
 	document.getElementById("player.mHand.name").innerHTML = loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0].name;
 	document.getElementById("player.mHand.weaponAtk").innerHTML = loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0].weaponAtk;
-	document.getElementsByClassName("stones")[0].innerHTML = stones;
-    document.getElementsByClassName("player.maxint")[0].innerHTML = player.maxint;
+	document.getElementsByClassName("stones")[0].innerHTML = Number(stones).toFixed(2);
+    document.getElementsByClassName("player.maxint")[0].innerHTML = Number(player.maxint).toFixed(2);
     document.getElementsByClassName("focusCost")[0].innerHTML = upgradeCost.nextFocus;
-	document.getElementById("player.storagespace").innerHTML = player.storagespace;
-	document.getElementById("player.storagemax").innerHTML = player.storagemax;
+	document.getElementById("player.storagespace").innerHTML = Number(player.storagespace).toFixed(2);
+	document.getElementById("player.storagemax").innerHTML = Number(player.storagemax).toFixed(2);
 	
 };
 // --BATTLE--
@@ -756,7 +826,7 @@ window.setInterval(function(){
 	rngcolorgen();
 	InvNames();
 	GetPlayerAtkRt();
+	GetPlayerBodyStats();
 	
-	
-}, 1000);
+}, 250);
 

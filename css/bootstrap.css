@@ -27,8 +27,16 @@ font: 14px Verdana, Arial, Helvetica, sans-serif;
 display:none;
 }
 
+.tooltip_templates { display: none; }
+
 #statstable{
     font-size:25%;
+}
+
+.GameButtons{
+  /* text-decoration: underline; */
+  /* padding-bottom: 50px; */
+  font-size:75%;
 }
 
 #GUI_MainPage{

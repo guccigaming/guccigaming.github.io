@@ -17,6 +17,8 @@
 
 		<!-- Custom styles for this template -->
 		<link href="css/bootstrap.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="css/tooltipster.bundle.min.css" />
+		
 		<script src="lootrtable.js"></script>
 	</head>
 
@@ -33,6 +35,7 @@
 			  <a class="nav-item nav-link active" href="#" onClick="ShowMainPage()">Home <span class="sr-only">(current)</span></a>
 			  <a class="nav-item nav-link" href="#" onClick="ShowCraftPage()" id="CraftPageUnlocked">Crafting</a>
 			  <a class="nav-item nav-link" href="#" onClick="ShowCombatPage()" id="CombatPageUnlocked">Combat</a>
+			  <a class="nav-item nav-link" href="#" onClick="ShowWorldPage()" id="WorldPageUnlocked">World</a>
 			  <a class="nav-item nav-link disabled" href="#">Disabled</a>
               <a class="nav-item nav-link" id="NavSaveButton">Save</a>
               <a class="nav-item nav-link" id="NavLoadButton">Load</a>
@@ -43,7 +46,10 @@
 		<div class="container" id="GUI_MainPage">
 		  <div class="row">
 			<div class="col-4" id=GUI_MainPage_Left>
-				<h1>Statistics</h1>
+				<a style="font-style:italic;">Statistics</a>
+					<br />
+					
+					<br />
                     <div class="container" >                                                                                     
                       <div class="table-responsive" id="statstable">          
                       <table class="table">
@@ -72,9 +78,23 @@
                                 <td></td>
                                 </tr>
                         </tbody>
-                      </table>
-                      </div>
-                    </div>
+					  </table>
+					  </div>
+					  <br />
+
+					</div>
+					<div>
+											  
+						<a style="font-style:italic;">Body Stats</a>
+						<br />
+						<table>
+							<thead></thead>
+							<tbody>
+								<span id="HUD_PlayerStats" style="font-size:80%;"></span>
+							</tbody>
+						</table>
+					</div>
+				<br />
                         <div >
 <!--                            Intelligence: <span id="intelligence" >0</span>/<span class="player.maxint">0</span> &nbsp;&nbsp; +<span id="intps" style="right">0</span> -->
                             
@@ -90,7 +110,11 @@
 				    </div>				
 			         </div>
 			<div class="col-4">
-				<h1>Actions</h1>
+				<a style="font-style:italic;">Actions</a>
+				<br />
+				<br />
+
+				<button type="button"  id="TrainBodyButton" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#TrainBodyTooltip">Train Body</button> <br />
                 
                 
                 
@@ -216,7 +240,13 @@
 
             </div>
         </div>
-        
+		
+		<!-- World Page -->
+		<div class="container" id="GUI_WorldPage">
+			Mysterious Forest
+			
+
+		</div>
 
 
 <!--  TOOLTIPS-->
@@ -224,6 +254,12 @@
 <div id="save_message" class="popup_msg">
    Saved!
 </div>
+<div class="tooltip_templates">
+    <span id="TrainBodyTooltip" style="font-size:75%;">
+        Gain +0.05 to one randomly chosen body stat.
+    </span>
+</div>
+
 
 
 
@@ -234,9 +270,10 @@
 		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 		<script src="js/bootstrap.min.js"></script>
-		
+		<!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script> -->
+
 		<script type="text/javascript" src="main.js"></script>
-       
+		<script type="text/javascript" src="js/tooltipster.bundle.min.js"></script>
         
 	</body>
 
