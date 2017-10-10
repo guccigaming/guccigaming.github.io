@@ -772,7 +772,7 @@ function startFight(){
 //get player total attackrate
 function GetPlayerAtkRt() {
 	var atk1 = Number(loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0].weaponAtk)
-	var totalAtk = atk1 + Math.floor(player.bodystats.strength * 0.2) + player.spiritstats.ki * 0.1 + player.cLevel * + (Math.pow(player.cRank, 2) - 1);
+	var totalAtk = atk1 + Math.floor(player.bodystats.strength * 0.2) + (player.spiritstats.ki * 0.1) + (player.cLevel * 10 + (Math.pow(player.cRank+1, 4) - 1));
 	player.atkrating = totalAtk;
 	document.getElementById("player.atkrating").innerHTML = player.atkrating;
 };	
@@ -1171,7 +1171,16 @@ function attackMonster() {
 			monster.hp -= playerdamage;
 			
 			document.getElementById("monster.hp").innerHTML = monster.hp
-			if(monster.hp < 0){
+			if(monster.hp <= 0) {
+				player.spiritstats.soulpower += monster.drops.soulpower
+				message = "You killed the " + monster.name + "<br />" + "You got " + monster.drops.soulpower + "soulpower! </br>"
+				Message();
+				startFight();
+				message = "You found a new monster: " + monster.name + "<br />"
+				Message();
+			}
+		}
+		else if(monster.hp <= 0){
 				player.spiritstats.soulpower += monster.drops.soulpower
 				message = "You killed the " + monster.name + "<br />" + "You got " + monster.drops.soulpower + "soulpower! </br>"
 				Message();
@@ -1179,7 +1188,7 @@ function attackMonster() {
 				message = "You found a new monster: " + monster.name + "<br />"
 				Message();
 			};
-		};
+		
 	};
 };
 
