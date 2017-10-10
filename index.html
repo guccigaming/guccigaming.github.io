@@ -33,9 +33,10 @@
 		  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 			<div class="navbar-nav">
 			  <a class="nav-item nav-link active" href="#" onClick="ShowMainPage()">Home <span class="sr-only">(current)</span></a>
-			  <a class="nav-item nav-link" href="#" onClick="ShowCraftPage()" id="CraftPageUnlocked">Crafting</a>
+			  <a class="nav-item nav-link" href="#" onClick="ShowCraftPage()" id="CraftPageUnlocked"  style=" text-shadow: 0 0 3px #874112; ">Crafting</a>
 			  <a class="nav-item nav-link" href="#" onClick="ShowCombatPage()" id="CombatPageUnlocked" style=" text-shadow: 0 0 3px #FF0000; ">Combat </a>
 			  <a class="nav-item nav-link" href="#" onClick="ShowWorldPage()" id="WorldPageUnlocked">World</a>
+			  <a class="nav-item nav-link" href="#" onClick="ShowKnowledgePage()" id="KnowledgePageTab" style=" text-shadow: 0 0 3px #0A6BFC; ">Knowledge </a>
 			  <a class="nav-item nav-link disabled" href="#">Disabled</a>
               <a class="nav-item nav-link" id="NavSaveButton">Save</a>
               <a class="nav-item nav-link" id="NavLoadButton">Load</a>
@@ -77,7 +78,7 @@
                                 </tr>
                             <tr>
                                 <td>Food</td>
-                                <td> <span id="food">0</span></td>
+                                <!-- <td> <span id="food">0</span></td> -->
                                 <td></td>
                                 </tr>
                         </tbody>
@@ -119,7 +120,9 @@
                         </div>
                     
                     <div id="woodandstonesreq">
-                        Stones: <span id="stones"> 0 </span>
+						Stones: <span id="stones"> 0 </span>
+						<br />
+						Food: <span id="food"> 0 </span>
                         <br />
 					
 				    </div>				
@@ -161,7 +164,7 @@
 			  
 				
 				You wake up, but can't seem to move your body or open your eyes!<br />---<br />
-				<p id="myLog"></p>
+				<p id="myLog"></p>	
 				
 
 			</div>
@@ -178,16 +181,32 @@
 			<div class="row">
 				<div class="col-4" id="GUI_CraftPage_Left">
 					<h1>Tools</h1>
-					<button type="button" class="btn btn-secondary btn-sm"  onclick="craftSpear()">Make Wooden Spear</button> Cost: 50 wood, 25 stones
+					<!--Tool Buttons-->
+
+					<button type="button" class="btn btn-secondary btn-sm"  onclick="craftSpear()">Wooden Spear</button> Cost: 50 wood, 25 stones
 					<br />
-					<button type="button" class="btn btn-secondary btn-sm"  onclick="craftWoodenPlank(1)">Make Wooden Plank</button> Cost: 20 wood
+					<button type="button" class="btn btn-secondary btn-sm"  onclick="craftWoodenPlank(1)">Wooden Plank</button> Cost: 20 wood
+					<br />
+					<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#CraftResearchBenchTooltip"  id="CraftResearchBenchButton">Research Bench</button>
+					<div>
+						<h3>Misc.</h3>
+						<button type="button" class="btn btn-secondary btn-sm"  id="WanderUnlocked" onClick="Wander()">Wander</button>
+						<br >
+						<button type="button" class="btn btn-secondary btn-sm"  id="ForageUnlocked" onClick="Forage(10)">Forage</button>
+						<br />
+						<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm"  data-tooltip-content="#ChopWoodToolTip"  id="PrimitiveToolsUnlocked" onClick="ChopWood(5)" style="display:none;">Chop wood.</button>
+
+
+					</div>
 				</div>
 				<div id="GUI_CraftPage_2" class="col-4">
 					<h1>Inventory</h1>
 					<div style="height:200px;overflow-y:scroll;">
 						Stones: <span class="stones">0</span><br />
 						Wood: <span class="wood">0</span><br />
-						Wooden Planks: <a id="InvWoodenPlanks">0</a>
+						Wooden Planks: <a id="InvWoodenPlanks">0</a><br />
+						Research benches: <a id="InvResearchbench">0</a>
+						
 					</div>
 						<br /><br /><br />
 						<hr>
@@ -266,10 +285,31 @@
             </div>
         </div>
 		
+		<!-- Knowledge Page -->
+		<div class="container" id="GUI_KnowledgePage" style="display:none;">
+
+			<div class="row">
+				<div class="col-8">
+					<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#PrimitiveToolsTooltip"  id="PrimitiveTools">Primitive Tools</button>
+					
+
+					<div id="PrimitiveToolsUnlocked2" style="display:none;">
+						<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#MTTooltip"  id="MeasuringTools">Measuring Tools</button>
+					</div>
+				</div>
+				<div class="col-4" id="knowledgemsgbox">
+					
+				</div>
+			</div>
+		</div>
+
 		<!-- World Page -->
 		<div class="container" id="GUI_WorldPage" style="display:none;">
 			Mysterious Forest
-			
+			<br />
+			<div class="alert alert-warning" role="alert">
+				This is a work in progress.
+			  </div>
 
 		</div>
 
@@ -296,6 +336,26 @@
 
 	<span id="ForageTooltip" style="font-size:75%;">
         Gain some food to boost energy regen rate.
+	</span>
+
+	<span id="CraftResearchBenchTooltip" style="font-size:75%;">
+        Create a research bench for 3 wooden planks.
+	</span>
+
+	<span id="PrimitiveToolsTooltip" style="font-size:75%;">
+		-200 spirit power, needs atleast 3 research benches. 
+		<br />
+		<div align="center" style="font-size:70%;">Research how to make tools from stone and wood.</div>
+	</span>
+
+	<span id="MTTooltip" style="font-size:75%;">
+			-5 wooden planks, needs atleast 5 research benches. 
+			<br />
+			<div align="center" style="font-size:70%;">Gives a 15% increase to certain crafted items.</div>
+		</span>
+
+	<span id="ChopWoodToolTip" style="font-size:75%;">
+       Gain 5 wood.
 	</span>
 
 </div>

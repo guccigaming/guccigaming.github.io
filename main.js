@@ -101,7 +101,9 @@ var player = {
 	buildingmatmultiplier : 1,
 	storagespace : 0,
 	storagemax : 500,
-	woodenplanks : 0
+	woodenplanks : 0,
+	researchbench : 0,
+	primitivetools : 0
 };
 
 //RANKNAMES
@@ -274,18 +276,41 @@ function equipItem(x) {
 };
 
 
+// -- CRAFTING --
+
+
+//JQuery crafting
+$(document).ready(function() {
+	
+	$( "#CraftResearchBenchButton" ).click(function() {
+		if(player.woodenplanks > 3){
+			player.woodenplanks -= 3;
+			player.researchbench += 1;
+			document.getElementById("InvResearchbench").innerHTML = player.researchbench
+			message = "You created 1 research bench for 3 wooden planks.<br />"
+			Message();
+		}
+		else{
+			message = "I don't have enough wooden planks. <br />"
+			Message();
+		};	
+	});
+
+
+});
+
 function GainWoodenPlanks(number){
 	var x = number * player.buildingmatmultiplier 
-	player.woodenplanks += x
+	player.woodenplanks += prettify(x)
 };
 
 function craftWoodenPlank(number) {
 	if(wood > 19){
 		wood -= 20
 		GainWoodenPlanks(number);
-		message = "I got " + number * player.buildingmatmultiplier + " wooden plank(s)!<br />";
+		message = "I got " + prettify(number * player.buildingmatmultiplier) + " wooden plank(s)!<br />";
 		Message();
-		document.getElementById("InvWoodenPlanks").innerHTML = player.woodenplanks
+		document.getElementById("InvWoodenPlanks").innerHTML = prettify(player.woodenplanks)
 	}
 	else {
 		message = "I don't have enough wood.. <br />";
@@ -395,28 +420,69 @@ function Focus(number){
 	document.getElementById("player.focus").innerHTML = player.focus;
 };
 
-function ChopWood() {
-	// let energy = document.getElementById("")
-	var btn=document.querySelector("button");
-	TimerStart(1,"#ChopTime")
-	btn.setAttribute("disabled", "");
+function ChopWood(number){
+	wood += number
 }
 
- function makeMoney() {      
-        $("#makeMoney").attr('disabled', 'disabled');
-        fillAgain();
-    }
+//Knowledge (upgrades)
 
-function fillAgain() {
-	setTimeout(function ()
-	{
-		if($("#divfillmeUp").find('div').length <= 10)
-		{
-			$("#divfillmeUp").append("<div style='background-color: red; width: 10%; height: 1%;float: left'></div>");
-			fillAgain();
+$(document).ready(function() {
+	$("#PrimitiveTools").click(function() {
+		if(player.spiritstats.soulpower > 199 && player.researchbench > 2 && player.primitivetools == 0){
+			player.spiritstats.soulpower -= 200;
+			player.primitivetools = 1;
+			$("#PrimitiveToolsUnlocked").show();
 		}
-	},2000)
-}
+		else {
+			message = "I'm missing some resources for this upgrade. <br />"
+			Message();
+		};
+	});
+
+	$("#MeasuringTools").click(function() {
+		if(player.woodenplanks > 4 && player.researchbench > 4 && player.primitivetools == 1 && player.measuringtools == null){
+			player.measuringtools = 1
+			player.woodenplanks -= 5;
+			player.buildingmatmultiplier += 0.15;
+			// $("#NextUpgrades").show();
+			message = "Using basic ink made from leaves and wooden planks to make measuring tools increased my efficiency in crafting certain resources!<br />";
+			Message();
+		}
+		else {
+			message = "I already know this or maybe I'm missing some resources? <br />"
+			Message();
+		};
+	});
+
+});
+
+
+
+
+
+// this is not used, might use it for reference??
+// function ChopWood() {
+// 	// let energy = document.getElementById("")
+// 	var btn=document.querySelector("button");
+// 	TimerStart(1,"#ChopTime")
+// 	btn.setAttribute("disabled", "");
+// }
+
+//  function makeMoney() {      
+//         $("#makeMoney").attr('disabled', 'disabled');
+//         fillAgain();
+//     }
+
+// function fillAgain() {
+// 	setTimeout(function ()
+// 	{
+// 		if($("#divfillmeUp").find('div').length <= 10)
+// 		{
+// 			$("#divfillmeUp").append("<div style='background-color: red; width: 10%; height: 1%;float: left'></div>");
+// 			fillAgain();
+// 		}
+// 	},2000)
+// }
 
 	
 function ERegenPass(number){
@@ -449,7 +515,7 @@ function Wander(){
 		energy.value -= 10;
 		var rng = randomIntFromInterval(0,10);
 		var rng2 = randomIntFromInterval(0,10);
-		if (rng > 4) {
+		if (rng > 3) {
 			if (rng2 > 4) {
 				WSReq = 1;
 				wandergain = randomIntFromInterval(0,10);
@@ -589,36 +655,52 @@ function randomIntFromInterval(min,max)
 
 
 
-	function ShowCraftPage() {
-		$("#GUI_MainPage").hide();
-		$("#GUI_CraftPage").show();
-		$('#GUI_CombatPage').hide();
-		$('#GUI_WorldPage').hide();
-	};
+function ShowCraftPage() {
+	$("#GUI_MainPage").hide();
+	$("#GUI_CraftPage").show();
+	$('#GUI_CombatPage').hide();
+	$('#GUI_WorldPage').hide();
+	$("#GUI_KnowledgePage").hide();
+	
+};
 
-	function ShowCombatPage() {
-		$(document).ready(function(){
-			$('#GUI_CraftPage').hide();
-			$("#GUI_MainPage").hide();
-			$("#GUI_CombatPage").show();
-			$("#GUI_CombatPage").removeAttr("style");
-			$('#GUI_WorldPage').hide();
-		});
-	};		
-
-	function ShowMainPage() {
-		$('#GUI_CraftPage').hide();
-		$('#GUI_MainPage').show();
-		$('#GUI_CombatPage').hide();	
-		$('#GUI_WorldPage').hide();
-	};
-
-	function ShowWorldPage() {
-		$('#GUI_WorldPage').show();
-		$('#GUI_CombatPage').hide();
+function ShowCombatPage() {
+	$(document).ready(function(){
 		$('#GUI_CraftPage').hide();
 		$("#GUI_MainPage").hide();
-	;}
+		$("#GUI_CombatPage").show();
+		$("#GUI_CombatPage").removeAttr("style");
+		$('#GUI_WorldPage').hide();
+		$("#GUI_KnowledgePage").hide();
+		
+	});
+};		
+
+function ShowMainPage() {
+	$('#GUI_CraftPage').hide();
+	$('#GUI_MainPage').show();
+	$('#GUI_CombatPage').hide();	
+	$('#GUI_WorldPage').hide();
+	$("#GUI_KnowledgePage").hide();		
+};
+
+function ShowWorldPage() {
+	$('#GUI_WorldPage').show();
+	$('#GUI_CombatPage').hide();
+	$('#GUI_CraftPage').hide();
+	$("#GUI_MainPage").hide();
+	$("#GUI_KnowledgePage").hide();
+
+  
+;}
+
+function ShowKnowledgePage() {
+	$('#GUI_WorldPage').hide();
+	$('#GUI_CombatPage').hide();
+	$('#GUI_CraftPage').hide();
+	$("#GUI_MainPage").hide();
+	$("#GUI_KnowledgePage").show();
+;}
 
 
 //---TOOLTIPS---
@@ -627,7 +709,16 @@ $(document).ready(function(){
 		theme: 'tooltipster-borderless',
 		side: 'right'
 	});
-})
+	
+
+});
+
+$(document).ready(function () {
+    $('#navbar-nav a').on("click", function () {
+        $('#navbar-nav a').find("a").removeClass('active');
+        $(this).addClass('active');
+    });
+});
 
 //--Message stuff--
 
@@ -635,6 +726,7 @@ function Message(){
 	document.getElementById("myLog").innerHTML+=message;
 	document.getElementById("craftLog").innerHTML+=message;
 	document.getElementById("combatLog").innerHTML+=message;
+	document.getElementById("knowledgemsgbox").innerHTML+=message;
 	MessageScroll();
 //	CheckMessage();
 }
@@ -664,12 +756,15 @@ function MessageScroll() {
 
 //--SAVING--
 function saveitems(){
-    var saveitems1 = loot.branchs.equipment;
-    localStorage.setItem("saveitems",JSON.stringify(saveitems1)); 
+	var saveitems1 = loot.branchs.equipment.branchs.inventory.items;
+	var saveitems2 = loot.branchs.equipment.branchs.inventory.branchs.equipped.items;
+	localStorage.setItem("saveitems1",JSON.stringify(saveitems1)); 
+	localStorage.setItem("saveitems2",JSON.stringify(saveitems2)); 
 };
 
 function loaditems(){
-    loot.branchs.equipment = JSON.parse(localStorage.getItem("saveitems"));
+	loot.branchs.equipment.branchs.inventory.items = JSON.parse(localStorage.getItem("saveitems1"));
+	loot.branchs.equipment.branchs.inventory.branchs.equipped.items = JSON.parse(localStorage.getItem("saveitems2"));
 };
 
 
@@ -720,6 +815,15 @@ function load(){
 	document.getElementsByClassName("wood").innerHTML = Number(wood).toFixed(2);
 
 }
+
+
+//CHEATS
+
+function cheat(){
+	player.bodystats.strength = 500;
+	wood = 5000;
+	stones = 5000;
+};
 	
 //--LoopChecks--
 
@@ -727,6 +831,18 @@ function intpscheck() {
 	document.getElementById("intps").innerHTML = intps + (braincells*0.25);
 }
 
+//--KnowledgeUnlock Checks--
+function KnowledgeCheck(){
+	if(player.primitivetools == 1){
+		$("#PrimitiveToolsUnlocked").show();
+		$("#PrimitiveToolsUnlocked2").show();
+		$("#PrimitiveTools").attr("disabled", true);
+	}
+	else{
+		$("#PrimitiveToolsUnlocked").hide();
+		$("#PrimitiveToolsUnlocked2").hide();
+	}
+};
 
 
 // --ActionChecks--	
@@ -771,7 +887,19 @@ function ActionCheck() {
 			$("#CraftPageUnlocked").hide();
 			$("#CombatPageUnlocked").hide();
 		});
-	}	
+	}
+	if (player.researchbench > 1) {
+		// document.getElementById("CraftPageUnlocked").classList.add('nav-item nav-link');
+		$(document).ready(function(){	
+			$("#KnowledgePageTab").show();
+		});
+	}
+	else {
+		// document.getElementById("CraftPageUnlocked").classList.add('nav-item nav-link disabled');
+		$(document).ready(function(){
+			$("#KnowledgePageTab").hide();
+		});
+	}		
 };	
 
 function WSReqCheck() {
@@ -817,6 +945,7 @@ function InvCheck() {
 	document.getElementById("player.atkrating").innerHTML = Number(player.atkrating).toFixed(2); 
 	document.getElementById("player.hp").innerHTML = player.hp;
 	document.getElementById("player.maxhp").innerHTML = player.maxhp;
+	document.getElementById("food").innerHTML = food;
 	document.getElementById("HUD_inv_1").innerHTML = HUD_inv_1;
 	document.getElementById("player.atkrating").innerHTML = player.atkrating;
 	document.getElementById("player.mHand.name").innerHTML = loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0].name;
@@ -826,6 +955,7 @@ function InvCheck() {
     document.getElementsByClassName("focusCost")[0].innerHTML = upgradeCost.nextFocus;
 	document.getElementById("player.storagespace").innerHTML = Number(player.storagespace).toFixed(2);
 	document.getElementById("player.storagemax").innerHTML = Number(player.storagemax).toFixed(2);
+	document.getElementById("InvResearchbench").innerHTML = player.researchbench;
 	
 };
 // --BATTLE--
@@ -915,5 +1045,6 @@ window.setInterval(function(){
 	GetPlayerBodyStats();
 	GetPlayerSpiritStats();
 	getLevelRank();
+	KnowledgeCheck();
 	
 }, 250);

@@ -79,6 +79,12 @@ display:none;
 	
 }
 
+#knowledgemsgbox {
+	overflow-y: scroll;
+	height: 500px;
+    border-left-style: double;
+    padding-left: 5px;
+}
 
 
 #messageboxID {
