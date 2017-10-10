@@ -25,21 +25,41 @@
 
 	
 	<body>
-		<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
-		  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		  </button>
-		  <a class="navbar-brand" href="#">Incremental Life</a>
-		  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-			<div class="navbar-nav">
-			  <a class="nav-item nav-link active" href="#" onClick="ShowMainPage()">Home <span class="sr-only">(current)</span></a>
-			  <a class="nav-item nav-link" href="#" onClick="ShowCraftPage()" id="CraftPageUnlocked"  style=" text-shadow: 0 0 3px #874112; ">Crafting</a>
-			  <a class="nav-item nav-link" href="#" onClick="ShowCombatPage()" id="CombatPageUnlocked" style=" text-shadow: 0 0 3px #FF0000; ">Combat </a>
-			  <a class="nav-item nav-link" href="#" onClick="ShowWorldPage()" id="WorldPageUnlocked">World</a>
-			  <a class="nav-item nav-link" href="#" onClick="ShowKnowledgePage()" id="KnowledgePageTab" style=" text-shadow: 0 0 3px #0A6BFC; ">Knowledge </a>
-			  <a class="nav-item nav-link disabled" href="#">Disabled</a>
-              <a class="nav-item nav-link" id="NavSaveButton">Save</a>
-              <a class="nav-item nav-link" id="NavLoadButton">Load</a>
+		<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse" id="navigationbar">
+				<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<a class="navbar-brand" href="#">Immortal (Re?)Incremental</a>
+				<ul class="navbar-nav">
+						<li class="nav-item active"><a class= "nav-link" href="#" onClick="ShowMainPage()">Home <span class="sr-only">(current)</span></a>
+						</li>
+						<li><a class="nav-item nav-link" href="#" onClick="ShowCraftPage()" id="CraftPageUnlocked"  style=" text-shadow: 0 0 3px #874112; ">Crafting</a>
+						</li>
+						<li>
+							<a class="nav-item nav-link" href="#" onClick="ShowCombatPage()" id="CombatPageUnlocked" style=" text-shadow: 0 0 3px #FF0000; ">Combat </a>
+						</li>
+						<li>
+							<a class="nav-item nav-link" href="#" onClick="ShowWorldPage()" id="WorldPageTab" style=" text-shadow: 0 0 3px #04DD0B; ">World</a>
+						</li>
+						<li>
+							<a class="nav-item nav-link" href="#" onClick="ShowKnowledgePage()" id="KnowledgePageTab" style=" text-shadow: 0 0 3px #0A6BFC; ">Knowledge </a>
+						</li>
+							
+					</ul>
+				<div class="collapse navbar-collapse justify-content-end" id="navbarCollapse" >
+						<ul class="navbar-nav">
+								<li><a class="nav-item nav-link" id="NavSaveButton" style="color:red;">Save</a></li>
+								<li><a class="nav-item nav-link" id="NavLoadButton" style="color:red;">Load</a></li>
+						</ul>
+				</div>
+				</nav>
+
+
+
+
+
+	
+			  
               </div>
 		  </div>
 		</nav>
@@ -143,7 +163,21 @@
 				<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#WanderTooltip"  onClick="Wander()">Wander</button>
 				<br >
 				<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#ForageTooltip"  onClick="Forage(10)">Forage</button>
-
+				<br />
+				<br />
+				<br />
+				<div>
+					<a style="font-style:italic;size:115%;">Cultivation</a>
+					<hr>
+					<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#MediStTT"  id="StartMeditateButton">Meditate</button>
+					&nbsp; &nbsp;
+					<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#MediStopTT"  id="StopMeditateButton">Stop Meditating</button>
+					<br />
+					<br />
+					<button type="button" class="tooltipster GameButtons btn btn-secondary btn-sm" data-tooltip-content="#BreakthroughTT"  id="BreakThroughLevelButton">Breakthrough Level</button>
+					Breakthrough chance: <span id="BreakthroughChance"></span>
+					
+				</div>
 				
 				<!-- old buttons-->
                 <div id="oldbuttons" style="display:none">
@@ -357,7 +391,22 @@
 	<span id="ChopWoodToolTip" style="font-size:75%;">
        Gain 5 wood.
 	</span>
+	
 
+	<span id="BreakthroughTT" style="font-size:75%;font-style:italic;">
+			<span style="color:#FF5233;font-weight:bold;font-size:120%;">Start on your path to immortality.</span>
+			<hr>
+		
+			Try to break through to the next level of your rank. <br/>
+			
+			<br/>
+
+
+			Costs 250 soulpower.  <br/>
+			Effect: Stronger in fights
+
+		</span>
+		
 </div>
 
 

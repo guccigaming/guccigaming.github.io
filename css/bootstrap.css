@@ -16,6 +16,11 @@
 html body{
   background-color: #7E7E7E !important;
   /* font-family: "Verdana, sans-serif"  */
+  padding-top: 2.5rem !important;
+}
+
+#navigationbar{
+  
 }
 
 .popup_msg{
@@ -33,6 +38,9 @@ display:none;
 #statstable{
     font-size:25%;
 }
+
+
+
 
 .GameButtons{
   /* text-decoration: underline; */

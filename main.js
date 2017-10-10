@@ -70,6 +70,10 @@ loot.setModifiers([
 
 //--OBJECTS
 
+var check = {
+	MeditateStop : 1
+
+};
 
 
 var player = {
@@ -105,6 +109,11 @@ var player = {
 	researchbench : 0,
 	primitivetools : 0
 };
+
+var BreakthroughChance = 0
+
+
+
 
 //RANKNAMES
 // cRank 0 = Earthly Body
@@ -230,25 +239,94 @@ $(document).ready(function() {
 
   });
 
-});
-
-//Condense Soul Power
 
 
-$( "#condenseSPButton" ).click(function() {
-	if(player.spiritstats.soulpower > 50){
-		player.spiritstats.soulpower -= 50;
-		player.hiddenstats.SPcondensed += 1;
-		message = "Condensed 50 soulpower into 1 ki."
-	}
-	else{
-		message = "I don't have enough ki.. <br />";
-		Message();
-	};
+	//Condense Soul Power
+
+
+	$( "#condenseSPButton" ).click(function() {
+		if(player.spiritstats.soulpower > 50){
+			player.spiritstats.soulpower -= 50;
+			player.hiddenstats.SPcondensed += 1;
+			message = "Condensed 50 soulpower into 1 ki."
+		}
+		else{
+			message = "I don't have enough ki.. <br />";
+			Message();
+		};
 	
   
 
+	});
+
+	//Meditate button
+	$( "#StartMeditateButton" ).click(function() {
+		if(player.spiritstats.soulpower > 0){
+			message = "<a style=\"font-color:blue;\">You start meditating.</a><br />";
+			Message();
+			check.MeditateStop = 0
+		}
+	});
+
+	$( "#StopMeditateButton" ).click(function() {
+		
+			message = "<a style=\"font-color:blue;\">You stop meditating.</a><br />";
+			Message();
+			StopMeditate();
+		
+	});
+
+		//Breakthrough level button
+		$( "#BreakThroughLevelButton" ).click(function() {
+			if(player.spiritstats.soulpower < 250 || player.spiritstats.soulpower == null){
+				message = "<a>Need more soulpower to breakthrough.</a><br />";
+				Message();
+			}
+			else{
+				player.spiritstats.soulpower = 0
+				BreakthroughChance = 100 - Math.pow(1.52,player.cLevel)
+				document.getElementById("BreakthroughChance").innerHTML = Number(BreakthroughChance);
+				if(randomIntFromInterval(1,100) < BreakthroughChance){
+					player.cLevel += 1;
+					message = "<a style=\"color:green;\">You broke through to the next level!!</a><br />";
+					Message();	
+				}
+				else{
+					message = "<a style=\"color:red;\">You failed to break through..</a>"
+				}
+			}
+			
+		});
+
 });
+
+
+function Meditate(){
+	if(player.spiritstats.soulpower < 1){
+		StopMeditate();
+	}
+	else{
+		rng = randomIntFromInterval(1,12)
+		player.spiritstats.soulpower -= prettify(0.05 * player.spiritstats.ki);
+
+		if(rng < 5){
+			player.bodystats.dexterity += prettify(0.002 * player.spiritstats.ki);
+			}
+			else if(rng > 4 && rng < 9){
+				player.bodystats.strength += prettify(0.002 * player.spiritstats.ki);
+			}
+			
+			else if(rng > 8){
+				player.bodystats.intelligence += prettify(0.002 * player.spiritstats.ki);
+			}	
+	};
+
+};
+
+function StopMeditate(){
+	check.MeditateStop = 1;
+};
+
 	
 function equipItem(x) {
 	 var invSlotIDNr = x;
@@ -421,7 +499,17 @@ function Focus(number){
 };
 
 function ChopWood(number){
-	wood += number
+	if(energy.value >= 10){
+		let energy = document.getElementById("energy")
+		energy.value -= 10;
+		wood += prettify(number * player.buildingmatmultiplier);
+		message = "Chopped some trees to get " + prettify(number * player.buildingmatmultiplier) + " wood." 
+	}
+	else{
+		message = "I'm too tired.. <br />";
+		Message();
+	}
+
 }
 
 //Knowledge (upgrades)
@@ -516,16 +604,16 @@ function Wander(){
 		var rng = randomIntFromInterval(0,10);
 		var rng2 = randomIntFromInterval(0,10);
 		if (rng > 3) {
-			if (rng2 > 4) {
+			if (rng2 >= 4) {
 				WSReq = 1;
-				wandergain = randomIntFromInterval(0,10);
+				wandergain = randomIntFromInterval(0,10) * prettify((player.bodystats.dexterity*1.15 - player.bodystats.dexterity));
 				wood += wandergain;
 				var msg1 = "You gained"
 				var msg2 = "wood! <br />"
 				message = msg1 + " " + wandergain + " " + msg2
 				Message();	
 				} else { 
-					wandergain = randomIntFromInterval(0,10);
+					wandergain = randomIntFromInterval(0,10); prettify((player.bodystats.strength*1.15 - player.bodystats.strength))
 					WSReq = 1;
 					var msg1 = "You gained"
 					var msg2 = "stones!<br />"				
@@ -569,18 +657,29 @@ function prettify(input){
 //save-load buttons navbar
 $(document).ready(function(){
     $("#NavSaveButton").click(function(){
-        //$(this).hide();
-        save();
-        message =  "<h1 style=\"color:red;\">Saved!</h1>";
-        Message();
+		//$(this).hide();
+		if (confirm('Are you sure you want to save? This will overwrite any existing save.')) {
+			save();
+			message =  "<h1 style=\"color:red;\">Saved!</h1>";
+			Message();
+		} else {
+			message = "Saving canceled. <br />"
+			Message();
+		}
+       
     });
 
     $("#NavLoadButton").click(function(){
-        //$(this).hide();
-        load();
-        message =  "<h1 style=\"color:red;\">Game Loaded!</h1>";
-        Message();
-    });
+		//$(this).hide();
+		if (confirm('Are you sure you want to load? This will overwrite your current game.')) {
+			load();
+			message =  "<h1 style=\"color:red;\">Game Loaded!</h1>";
+			Message();
+		} else {
+			message = "Loading save file canceled. <br />"
+			Message();
+		}
+	});
 });
 
 
@@ -617,9 +716,9 @@ function startFight(){
 
 //get player total attackrate
 function GetPlayerAtkRt() {
-	var atk1 = loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0].weaponAtk
-	var totalAtk = atk1;
-	player.atkrating = totalAtk	
+	var atk1 = Number(loot.branchs.equipment.branchs.inventory.branchs.equipped.branchs.mHand.items[0].weaponAtk)
+	var totalAtk = atk1 + Math.floor(player.bodystats.strength * 0.2) + player.spiritstats.ki * 0.1 + player.cLevel * + (Math.pow(player.cRank, 2) - 1);
+	player.atkrating = totalAtk;
 	document.getElementById("player.atkrating").innerHTML = player.atkrating;
 };	
 
@@ -899,6 +998,18 @@ function ActionCheck() {
 		$(document).ready(function(){
 			$("#KnowledgePageTab").hide();
 		});
+	}
+	if (player.cRank > 0) {
+		// document.getElementById("CraftPageUnlocked").classList.add('nav-item nav-link');
+		$(document).ready(function(){	
+			$("#WorldPageTab").show();
+		});
+	}
+	else {
+		// document.getElementById("CraftPageUnlocked").classList.add('nav-item nav-link disabled');
+		$(document).ready(function(){
+			$("#WorldPageTab").hide();
+		});
 	}		
 };	
 
@@ -931,6 +1042,9 @@ function StatCheck() {
 		
 	}
 
+	//Add STR to maxhp
+	player.maxhp = 300 + prettify(player.bodystats.strength * 1.05)
+
 
 
 };
@@ -942,9 +1056,9 @@ function InvCheck() {
     document.getElementById("energynum").innerHTML = energynum;
 	document.getElementsByClassName("wood")[0].innerHTML = Number(wood).toFixed(2);
 	document.getElementById("stones").innerHTML = Number(stones).toFixed(2);
-	document.getElementById("player.atkrating").innerHTML = Number(player.atkrating).toFixed(2); 
-	document.getElementById("player.hp").innerHTML = player.hp;
-	document.getElementById("player.maxhp").innerHTML = player.maxhp;
+	document.getElementById("player.atkrating").innerHTML = Number(player.atkrating).toFixed(0); 
+	document.getElementById("player.hp").innerHTML = Number(player.hp).toFixed(1);
+	document.getElementById("player.maxhp").innerHTML = Number(player.maxhp).toFixed(1);
 	document.getElementById("food").innerHTML = food;
 	document.getElementById("HUD_inv_1").innerHTML = HUD_inv_1;
 	document.getElementById("player.atkrating").innerHTML = player.atkrating;
@@ -956,6 +1070,8 @@ function InvCheck() {
 	document.getElementById("player.storagespace").innerHTML = Number(player.storagespace).toFixed(2);
 	document.getElementById("player.storagemax").innerHTML = Number(player.storagemax).toFixed(2);
 	document.getElementById("InvResearchbench").innerHTML = player.researchbench;
+	document.getElementById("BreakthroughChance").innerHTML = (100 - Math.pow(1.52,player.cLevel)).toFixed(1);
+
 	
 };
 // --BATTLE--
@@ -1046,5 +1162,6 @@ window.setInterval(function(){
 	GetPlayerSpiritStats();
 	getLevelRank();
 	KnowledgeCheck();
-	
+	if(check.MeditateStop == 0){Meditate()}
+
 }, 250);
