@@ -684,7 +684,25 @@ $(document).ready(function(){
 
 
 
+//Monster Breeds
+var MonsterBreeds = [
+	'Orcs',
+	'Goblins',
+]
 
+//random monster names
+
+var MonsterNames = { 
+	Orcs : {
+		FirstNames : ['Abzag', 'Abzrolg', 'Abzug', 'Agganor', 'Aghurz'],
+		LastNames : ['Abimfash', 'Adkul', 'Adlugbuk', 'Agazu', 'Agdesh', 'Aglash']
+	},
+	Goblins : {
+		FirstNames : ['Gobber', 'Goober', 'Goobler'],
+		LastNames : ['Guburu', 'Gulungu', 'Gururu']
+	}
+
+};
 
 
 //startfight
@@ -695,23 +713,60 @@ function startFight(){
 		Message()
 	}
 	else{
-	var maxhp = randomIntFromInterval(150,200)
-	monster = {
+	
+	var maxhp = randomIntFromInterval(150,200);
+	var breedrng = randomIntFromInterval(0,MonsterBreeds.length-1)
+	if(breedrng == 0){
+		var breed = MonsterBreeds[0];
+		var randomFirstName = MonsterNames[breed].FirstNames[randomIntFromInterval(0,MonsterNames[breed].FirstNames.length-1)];
+		var randomLastName = MonsterNames[breed].LastNames[randomIntFromInterval(0,MonsterNames[breed].LastNames.length-1)]; 
+		
+		monster = {
 			hp : maxhp,
 			maxhp : maxhp,
 			level : 1,
 			drops : {soulpower : player.spiritstats.ki * 2}, //add drops from lootrtable
 			atkrating : randomIntFromInterval(5,15),
 			armor : 0,
-			name : "Test Monster",
-			breed : "Orc"
+			name : randomFirstName + " " +  randomLastName,
+			breed : breed
 			};
+	
 		document.getElementById("monster.maxhp").innerHTML = monster.maxhp;
 		document.getElementById("monster.hp").innerHTML = monster.hp;
 		document.getElementById("monster.level").innerHTML = monster.level;
 		document.getElementById("monster.breed").innerHTML = monster.breed;
 		document.getElementById("monster.name").innerHTML = monster.name;
+		}
+		else if(breedrng == 1){
+			var breed = MonsterBreeds[1];
+			var randomFirstName = MonsterNames[breed].FirstNames[randomIntFromInterval(0,MonsterNames[breed].FirstNames.length-1)];
+			var randomLastName = MonsterNames[breed].LastNames[randomIntFromInterval(0,MonsterNames[breed].LastNames.length-1)]; 
+			
+			monster = {
+				hp : maxhp,
+				maxhp : maxhp,
+				level : 1,
+				drops : {soulpower : player.spiritstats.ki * 2}, //add drops from lootrtable
+				atkrating : randomIntFromInterval(5,15),
+				armor : 0,
+				name : randomFirstName + " " +  randomLastName,
+				breed : breed
+				};
+		
+			document.getElementById("monster.maxhp").innerHTML = monster.maxhp;
+			document.getElementById("monster.hp").innerHTML = monster.hp;
+			document.getElementById("monster.level").innerHTML = monster.level;
+			document.getElementById("monster.breed").innerHTML = monster.breed;
+			document.getElementById("monster.name").innerHTML = monster.name;
+			}
 	}
+
+	
+	
+
+
+
 };
 
 //get player total attackrate
