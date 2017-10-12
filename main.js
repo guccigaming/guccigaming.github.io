@@ -278,7 +278,7 @@ $(document).ready(function() {
 
 		//Breakthrough level button
 		$( "#BreakThroughLevelButton" ).click(function() {
-			if(player.spiritstats.soulpower < 250 || player.spiritstats.soulpower == null){
+			if(player.spiritstats.soulpower < 250 * (player.cRank+1)|| player.spiritstats.soulpower == null){
 				message = "<a>Need more soulpower to breakthrough.</a><br />";
 				Message();
 			}
@@ -300,6 +300,11 @@ $(document).ready(function() {
 
 });
 
+
+//update tooltips
+function UpdateToolTips(){
+		
+}
 
 function Meditate(){
 	if(player.spiritstats.soulpower < 1){
