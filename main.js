@@ -77,7 +77,7 @@ var check = {
 
 
 var player = {
-	name : "Gucci",
+	name : "PlayerName",
 	cRank : 0,
 	intgainmodifier : 1.0,
 	//BODY-STATS
